@@ -3,19 +3,21 @@ package com.elearning.notification.entity;
 import com.elearning.utils.NotificationType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "notifications")
 public class Notification {
 
     @Id
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "userId is required")
     @Column(nullable = false)
     private String userId;
 
@@ -23,23 +25,23 @@ public class Notification {
     @Column(nullable = false)
     private NotificationType type;
 
+    @NotBlank(message = "title is required")
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @NotBlank(message = "message is required")
+    @Column(nullable = false)
     private String message;
 
-    @Column(nullable = false)
     private boolean isRead = false;
 
-    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime readAt;
 
     @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.isRead = false;
+    public void onCreate() {
+        createdAt = LocalDateTime.now();
+        isRead = false;
     }
 }
