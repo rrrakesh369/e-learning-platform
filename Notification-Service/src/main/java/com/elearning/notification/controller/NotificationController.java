@@ -3,6 +3,7 @@ package com.elearning.notification.controller;
 import com.elearning.core.dto.CommonResponse;
 import com.elearning.dto.request.NotificationRequest;
 import com.elearning.dto.response.NotificationResponse;
+import com.elearning.dto.response.NotificationStatsResponse;
 import com.elearning.notification.repository.NotificationRepository;
 import com.elearning.notification.service.NotificationService;
 import jakarta.validation.Valid;
@@ -43,6 +44,26 @@ private final NotificationService notificationService;
         return ResponseEntity.ok(response);
     }
 
+    @PatchMapping("/{id}/read")
+    public ResponseEntity<CommonResponse<NotificationResponse>>markAsRead(@PathVariable(name = "id") Long id){
+        NotificationResponse responseDto =notificationService.markAsRead(id);
+        CommonResponse<NotificationResponse> response =new CommonResponse<>();
+        response.setCode(200);
+        response.setMessage("Notification marked as read");
+        response.setData(responseDto);
+        return ResponseEntity.ok(response);
+    }
 
+    @GetMapping("/stats")
+    public ResponseEntity<CommonResponse<NotificationStatsResponse>>
 
+    getStats(@RequestParam(name = "userId")String userId){
+        NotificationStatsResponse stats =notificationService.getNotificationStats(userId);
+        CommonResponse<NotificationStatsResponse> response = new CommonResponse<>();
+        response.setCode(200);
+        response.setMessage("Notification statistics fetched");
+        response.setData(stats);
+        return ResponseEntity.ok(response);
+
+    }
 }
