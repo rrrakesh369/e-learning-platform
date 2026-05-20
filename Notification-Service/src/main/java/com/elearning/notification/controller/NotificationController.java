@@ -9,10 +9,9 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/notifications")
@@ -30,4 +29,20 @@ private final NotificationService notificationService;
       commonResponse.setCode(201);
         return ResponseEntity.ok(commonResponse);
     }
+
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<NotificationResponse>>> getByUserIsUnread( @RequestParam(name = "userId")String userId,
+                                                                                         @RequestParam(name = "unreadOnly"
+                                                                                                 ,required = false,defaultValue = "false") boolean unreadOnly)
+    {
+        List<NotificationResponse> notifications = notificationService.getNotifications(userId,unreadOnly);
+        CommonResponse<List<NotificationResponse>> response = new CommonResponse<>();
+        response.setCode(200);
+        response.setMessage("Notifications fetched");
+        response.setData(notifications);
+        return ResponseEntity.ok(response);
+    }
+
+
+
 }

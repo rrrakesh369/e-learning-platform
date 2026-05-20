@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 @Data
 public class NotificationRequest {
 
-    private Long id;
-
     @NotBlank
     private String userId;
 
@@ -23,9 +21,5 @@ public class NotificationRequest {
 
     @NotBlank
     private String message;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime readAt;
 
 }
