@@ -4,6 +4,7 @@ import com.elearning.core.dto.CommonResponse;
 import com.elearning.dto.request.NotificationRequest;
 import com.elearning.dto.response.NotificationResponse;
 import com.elearning.dto.response.NotificationStatsResponse;
+import com.elearning.exception.ResourceNotExistException;
 import com.elearning.notification.repository.NotificationRepository;
 import com.elearning.notification.service.NotificationService;
 import jakarta.validation.Valid;
@@ -46,12 +47,21 @@ private final NotificationService notificationService;
 
     @PatchMapping("/{id}/read")
     public ResponseEntity<CommonResponse<NotificationResponse>>markAsRead(@PathVariable(name = "id") Long id){
-        NotificationResponse responseDto =notificationService.markAsRead(id);
-        CommonResponse<NotificationResponse> response =new CommonResponse<>();
-        response.setCode(200);
-        response.setMessage("Notification marked as read");
-        response.setData(responseDto);
-        return ResponseEntity.ok(response);
+        try {
+            NotificationResponse responseDto =notificationService.markAsRead(id);
+            CommonResponse<NotificationResponse> response =new CommonResponse<>();
+            response.setCode(200);
+            response.setMessage("Notification marked as read");
+            response.setData(responseDto);
+            return ResponseEntity.ok(response);
+        }catch (ResourceNotExistException exception){
+            CommonResponse<NotificationResponse> response =new CommonResponse<>();
+            response.setCode(404);
+            response.setMessage(exception.getMessage());
+            response.setData(null);
+            return ResponseEntity.ok(response);
+        }
+
     }
 
     @GetMapping("/stats")
