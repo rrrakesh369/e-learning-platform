@@ -10,6 +10,7 @@ import com.elearning.notification.service.NotificationService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ private final NotificationService notificationService;
       commonResponse.setData(notificationResponse);
       commonResponse.setMessage("Notification Create Success");
       commonResponse.setCode(201);
-        return ResponseEntity.ok(commonResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
 
     @GetMapping

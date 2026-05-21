@@ -27,36 +27,28 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
 
-    public NotificationResponse createNotificationService(NotificationRequest request) {
-
-        // Check if notification already exists for the given user ID
-           boolean existsByUserId= notificationRepository.existsByUserId(request.getUserId());
-
-        // If user already exists, log information and throw duplicate exception
-           if(existsByUserId){
-               log.info("User is Available ");
-               throw new BadRequestException("Provide All Request, " + request.getUserId());
-           }
+    public NotificationResponse createNotificationService(NotificationRequest request){
 
         // Create new Notification object
-          Notification notification= new Notification();
+        Notification notification = new Notification();
 
         // Set notification details from request object
-           notification.setUserId(request.getUserId());
-           notification.setType(request.getType());
-           notification.setTitle(request.getTitle());
-           notification.setMessage(request.getMessage());
+        notification.setUserId(request.getUserId());
+        notification.setTitle(request.getTitle());
+        notification.setMessage(request.getMessage());
+        notification.setType(request.getType());
+        notification.setRead(false);
+        notification.setCreatedAt(LocalDateTime.now());
 
         // Save notification into database
-           notificationRepository.save(notification);
+        Notification savedNotification =notificationRepository.save(notification);
 
         // Log notification save operation with generated notification ID
-           log.info("Notification {} is save " + notification.getId());
+        log.info("Notification created for user {}", request.getUserId());
 
         // Convert entity to response DTO and return response
-            return NotificationMapper.toResponse(notification);
+        return NotificationMapper.toResponse(savedNotification);
     }
-
 
 
     public List<NotificationResponse> getNotifications(String userId, boolean unreadOnly) {
@@ -111,6 +103,7 @@ public class NotificationService {
 
         // Set read timestamp
         notification.setReadAt(LocalDateTime.now());
+
 
         // Save updated notification
         Notification updatedNotification = notificationRepository.save(notification);
