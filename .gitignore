@@ -1,2 +1,18 @@
 **/target/**
 .idea/**
+
+# Node
+node_modules/
+npm-debug.log
+
+# Spring Boot
+target/
+*.class
+*.jar
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store

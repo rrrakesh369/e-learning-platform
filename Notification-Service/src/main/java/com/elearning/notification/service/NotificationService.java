@@ -3,6 +3,7 @@ package com.elearning.notification.service;
 import com.elearning.dto.request.NotificationRequest;
 import com.elearning.dto.response.NotificationResponse;
 import com.elearning.dto.response.NotificationStatsResponse;
+import com.elearning.exception.BadRequestException;
 import com.elearning.exception.DuplicateResourceException;
 import com.elearning.exception.ResourceNotExistException;
 import com.elearning.notification.entity.Notification;
@@ -27,13 +28,14 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
 
     public NotificationResponse createNotificationService(NotificationRequest request) {
+
         // Check if notification already exists for the given user ID
            boolean existsByUserId= notificationRepository.existsByUserId(request.getUserId());
 
         // If user already exists, log information and throw duplicate exception
            if(existsByUserId){
                log.info("User is Available ");
-               throw new DuplicateResourceException("User is already exist with this userId, " + request.getUserId());
+               throw new BadRequestException("Provide All Request, " + request.getUserId());
            }
 
         // Create new Notification object
